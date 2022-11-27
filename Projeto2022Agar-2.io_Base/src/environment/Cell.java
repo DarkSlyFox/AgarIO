@@ -7,8 +7,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import game.Game;
 import game.Player;
 
-// teste
-
 public class Cell {
 	private Coordinate position;
 	private Game game;
