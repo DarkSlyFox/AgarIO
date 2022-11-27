@@ -9,6 +9,8 @@ import game.AutomaticPlayer;
 
 import javax.swing.JFrame;
 
+import environment.Direction;
+
 public class GameGuiMain implements Observer {
 	private JFrame frame = new JFrame("pcd.io");
 	private BoardJComponent boardGui;
@@ -38,6 +40,10 @@ public class GameGuiMain implements Observer {
 	public void init()  {
 		frame.setVisible(true);
 		game.loadPlayers();
+	}
+	
+	public Direction getLastDirection() {
+		return boardGui.getLastPressedDirection();
 	}
 
 	@Override

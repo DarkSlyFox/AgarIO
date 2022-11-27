@@ -22,9 +22,10 @@ public abstract class Player extends Thread {
 	protected byte originalStrength;
 	
 	private Coordinate coordinate;
-
+	protected long SLEEP_CYCLE;
+	
 	// TODO: get player position from data in game
-	public synchronized Cell getCurrentCell() {
+	public Cell getCurrentCell() {
 		return game.getCell(this.coordinate);
 	}
 
@@ -32,8 +33,9 @@ public abstract class Player extends Thread {
 		super();
 		this.id = id;
 		this.game = game;
-		currentStrength = strength;
-		originalStrength = strength;
+		this.currentStrength = strength;
+		this.originalStrength = strength;
+		this.SLEEP_CYCLE = strength * Game.REFRESH_INTERVAL;
 	}
 	
 	public void notifyPlayer() {
@@ -46,21 +48,22 @@ public abstract class Player extends Thread {
 		int _playerWhoWantsToMoveStrength = getCurrentStrength();
 		int _playerInCurrentCellStrength = p.getCurrentStrength();
 		
+		// Se o player que se quer mover tem + força que o que se encontra na célula.
 		if (_playerWhoWantsToMoveStrength > _playerInCurrentCellStrength) {
-			this.currentStrength += _playerInCurrentCellStrength;
+			this.currentStrength = (byte)Math.min(Game.MAX_STRENGTH, _playerInCurrentCellStrength + this.currentStrength);
 			p.currentStrength = 0;
 		}
 		else if (_playerWhoWantsToMoveStrength < _playerInCurrentCellStrength) {
-			p.currentStrength += _playerWhoWantsToMoveStrength;
+			p.currentStrength = (byte)Math.min(Game.MAX_STRENGTH, _playerWhoWantsToMoveStrength + p.currentStrength);
 			this.currentStrength = 0;
 		}
 		else {
 			if(new Random().nextBoolean()) {
-				this.currentStrength += _playerInCurrentCellStrength;
+				this.currentStrength = (byte)Math.min(Game.MAX_STRENGTH, _playerInCurrentCellStrength + this.currentStrength);
 				p.currentStrength = 0;
 			}
 			else {
-				p.currentStrength += _playerWhoWantsToMoveStrength;
+				p.currentStrength = (byte)Math.min(Game.MAX_STRENGTH, _playerWhoWantsToMoveStrength + p.currentStrength);
 				this.currentStrength = 0;
 			}
 		}
@@ -74,8 +77,16 @@ public abstract class Player extends Thread {
 		return this.currentStrength == 0;
 	}
 	
+	public boolean canMove() {
+		return isPlayerAlive() && !hasMaxStrength();
+	}
+	
 	public boolean hasMaxStrength() {
 		return this.currentStrength == Game.MAX_STRENGTH;
+	}
+	
+	public String getPlayerName() {
+		return "Player " + this.id;
 	}
 	
 	@Override
