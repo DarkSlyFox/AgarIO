@@ -22,13 +22,11 @@ public class GameGuiMain implements Observer {
 		game.addObserver(this);
 
 		buildGui();
-
 	}
 
 	private void buildGui() {
 		boardGui = new BoardJComponent(game);
 		frame.add(boardGui);
-
 
 		frame.setSize(800,800);
 		frame.setLocation(0, 150);
