@@ -38,11 +38,15 @@ public class ClientGuiMain implements Observer {
 
 	public void init()  {
 		frame.setVisible(true);
-		new Client(game).startClient("localhost", 8080, KeyEvent.VK_W, KeyEvent.VK_W, KeyEvent.VK_W, KeyEvent.VK_W);
+		new Client(game, boardGui).startClient("localhost", 8080, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D);
 	}
 	
 	public Direction getLastDirection() {
 		return boardGui.getLastPressedDirection();
+	}
+	
+	public void clearLastPressedDirection() {
+		boardGui.clearLastPressedDirection();
 	}
 
 	@Override

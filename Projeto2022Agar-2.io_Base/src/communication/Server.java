@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import environment.Coordinate;
+import environment.Direction;
 import game.ClientPlayer;
 import game.Game;
 import game.NetworkPayload;
@@ -29,11 +30,13 @@ public class Server {
 	private class DealWithClient extends Thread {
 		
 		private final int clientPort;
+		private RealPlayer realPlayer;
 		
 		public DealWithClient(Socket socket) throws IOException {
 			this.clientPort = Integer.parseInt(socket.getRemoteSocketAddress().toString().split(":")[1]);
 			
-			new RealPlayer(this.clientPort, game).start();
+			this.realPlayer =  new RealPlayer(this.clientPort, game);
+			this.realPlayer.start();
 			
 			doConnections(socket);
 		}
@@ -66,7 +69,15 @@ public class Server {
 		
 		private void receiveMessages() throws IOException {
 			if (in.ready()) {
-				System.out.println("Mensagem recebida servidor vinda do cliente: " + in.readLine());
+				System.out.println("Mensagem recebida servidor vinda do cliente: ");
+				
+				String direction = in.readLine();
+				
+				System.out.println(direction);
+				
+				this.realPlayer.setDirection(Direction.UP);
+				
+				System.out.println(direction);
 			}
 		}
 		

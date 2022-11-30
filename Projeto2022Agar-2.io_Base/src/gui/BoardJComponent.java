@@ -108,6 +108,7 @@ public class BoardJComponent extends JComponent implements KeyListener {
 			lastPressedDirection=environment.Direction.DOWN;
 			break;
 		}
+		System.out.println(lastPressedDirection);
 	}
 
 

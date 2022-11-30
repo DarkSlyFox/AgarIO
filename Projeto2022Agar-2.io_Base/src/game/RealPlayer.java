@@ -1,6 +1,11 @@
 package game;
 
+import environment.Coordinate;
+import environment.Direction;
+
 public class RealPlayer extends Player  {
+	
+	private Direction lastDirection;
 	
 	public RealPlayer(int id, Game game) {
 		super(id, game, (byte)5);
@@ -9,25 +14,31 @@ public class RealPlayer extends Player  {
 	public boolean isHumanPlayer() {
 		return true;
 	}
-
+	
+	public void setDirection(Direction d) {
+		lastDirection = d;
+	}
+	
 	@Override
 	public void run() {
 		game.addPlayerToGame(this);
-		
-		while(this.canMove()) {
-			//TODO: Aqui na prática vamos obter a direção vinda da comunicação externa.
+				
+		while(true) {
 			
-			
-			
-
-//			game.movePlayer(this, newCoordinate);
-			
-//			try {
-//				Thread.sleep(this.SLEEP_CYCLE);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+			try {
+				if (lastDirection != null) {
+					Coordinate randomCoordinate = lastDirection.getVector();
+					Coordinate newCoordinate = this.getCurrentCell().getPosition().sumCoordinates(randomCoordinate);
+	
+					game.movePlayer(this, newCoordinate);
+					
+					lastDirection = null;
+				}
+				Thread.sleep(Game.REFRESH_INTERVAL);
+			}
+			catch (InterruptedException e) {
+				System.out.println(e.getMessage());
+			}
 		}
 	}
 }

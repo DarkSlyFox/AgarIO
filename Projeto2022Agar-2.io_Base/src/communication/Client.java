@@ -10,10 +10,12 @@ import java.net.Socket;
 
 import environment.Cell;
 import environment.Coordinate;
+import environment.Direction;
 import game.ClientPlayer;
 import game.Game;
 import game.NetworkPayload;
 import game.Player;
+import gui.BoardJComponent;
 
 public class Client {
 
@@ -21,9 +23,11 @@ public class Client {
 	private PrintWriter out;
 	private Socket socket;
 	private Game game;
+	private BoardJComponent boardJComponent;
 	
-	public Client(Game game) {
+	public Client(Game game, BoardJComponent boardJComponent) {
 		this.game = game;
+		this.boardJComponent = boardJComponent;
 	}
 	
 	private class DealWithServer extends Thread {
@@ -156,8 +160,17 @@ public class Client {
 
 	private void sendMessages() throws IOException {
 
-		System.out.println("Envio de mensagem por parte do cliente:");
-		out.println("direção");
-		out.flush();
+		Direction d = boardJComponent.getLastPressedDirection();
+		
+		if (d != null) {
+			System.out.println("Envio de mensagem por parte do cliente:");
+			out.println(d.toString());
+			out.flush();
+			boardJComponent.clearLastPressedDirection();
+		}
 	}
+	
+	
+	
+	
 }
