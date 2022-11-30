@@ -41,11 +41,10 @@ public class GameGuiMain implements Observer {
 		game.loadPlayers();
 		
 		try {
-			new Server(8080).startServing();
+			new Server(8080, game).startServing();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		
 	}
 	
 	public Direction getLastDirection() {

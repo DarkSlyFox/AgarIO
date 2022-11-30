@@ -54,5 +54,4 @@ public class ClientGuiMain implements Observer {
 		ClientGuiMain game = new ClientGuiMain();
 		game.init();
 	}
-
 }
