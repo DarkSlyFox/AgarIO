@@ -12,12 +12,12 @@ import communication.Server;
 import environment.Direction;
 import game.Game;
 
-public class GameGuiMain implements Observer {
+public class ClientGuiMain implements Observer {
 	private JFrame frame = new JFrame("pcd.io");
 	private BoardJComponent boardGui;
 	private Game game;
 
-	public GameGuiMain() {
+	public ClientGuiMain() {
 		super();
 		game = new Game();
 		game.addObserver(this);
@@ -38,14 +38,7 @@ public class GameGuiMain implements Observer {
 
 	public void init()  {
 		frame.setVisible(true);
-		game.loadPlayers();
-		
-		try {
-			new Server(8080).startServing();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
+		new Client("localhost", 8080, KeyEvent.VK_W, KeyEvent.VK_W, KeyEvent.VK_W, KeyEvent.VK_W).startClient();
 	}
 	
 	public Direction getLastDirection() {
@@ -58,7 +51,7 @@ public class GameGuiMain implements Observer {
 	}
 
 	public static void main(String[] args) {
-		GameGuiMain game = new GameGuiMain();
+		ClientGuiMain game = new ClientGuiMain();
 		game.init();
 	}
 

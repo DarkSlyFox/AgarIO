@@ -37,8 +37,8 @@ public class Server {
 		private ObjectOutputStream out;
 
 		private void doConnections(Socket socket) throws IOException {
-			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			out = new ObjectOutputStream(socket.getOutputStream());
+			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		}
 		
 		private void serve() throws IOException {
@@ -49,13 +49,18 @@ public class Server {
 		}
 		
 		private void receiveMessages() throws IOException {
-			System.out.println("Mensagem recebida servidor vinda do cliente: " + in.readLine());
+			if (in.ready()) {
+				System.out.println("Mensagem recebida servidor vinda do cliente: " + in.readLine());
+			}
 		}
 		
 		private void sendMessages() throws IOException {
 			try {
 				NetworkPayload payload = new NetworkPayload(2, "ola");
 				out.writeObject(payload);
+				out.flush();
+				
+				System.out.println("Mensagem enviada pelo servidor: ");
 				
 				Thread.sleep(Game.REFRESH_INTERVAL);
 			} catch (InterruptedException e) {

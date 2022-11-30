@@ -1,15 +1,13 @@
 package communication;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-
+import game.Game;
 import game.NetworkPayload;
 
 public class Client {
@@ -33,29 +31,49 @@ public class Client {
 		this.left = left;
 		this.right = right;
 	}
-
-	public void runClient() {
-		try {
-			connectToServer();
-			
-			System.out.println("Inicio de cliente:");
-			
-			while(!socket.isClosed()) {
-				receiveMessages();
-				sendMessages();
-			}
-		}
-		catch (IOException e)
-		{
-			System.out.println(e.getMessage());
-		}
-		finally {
+	
+	private class DealWithServer extends Thread {
+		
+		@Override
+		public void run() {
 			try {
-				socket.close();
+				connectToServer();
+				
+				System.out.println("Inicio de cliente:");
+				
+				while(!socket.isClosed()) {
+					try {
+						receiveMessages();
+						sendMessages();
+						
+						Thread.sleep(Game.REFRESH_INTERVAL);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
 			}
-			catch (IOException e) {
+			catch (IOException e)
+			{
 				System.out.println(e.getMessage());
 			}
+			finally {
+				try {
+					socket.close();
+				}
+				catch (IOException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+		}
+	}
+	
+	public void startClient() {
+		
+		try {
+			new DealWithServer().start();
+		}
+		catch(Exception e) {
+			System.out.print(e.getMessage());
 		}
 	}
 
@@ -65,8 +83,10 @@ public class Client {
 		socket = new Socket(endereco, port);
 		System.out.println("Socket:" + socket);
 		
-		out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
 		in = new ObjectInputStream(socket.getInputStream());
+
+		out = new PrintWriter(new BufferedWriter(
+				new OutputStreamWriter(socket.getOutputStream())), true);
 	}
 
 	private void receiveMessages() throws IOException {
@@ -83,7 +103,9 @@ public class Client {
 	}
 
 	private void sendMessages() throws IOException {
+
 		System.out.println("Envio de mensagem por parte do cliente:");
-		out.write("direção");
+		out.println("direção");
+		out.flush();
 	}
 }
