@@ -1,8 +1,5 @@
 package game;
 
-import environment.Coordinate;
-import environment.Direction;
-
 public class RealPlayer extends Player  {
 	
 	public RealPlayer(int id, Game game) {

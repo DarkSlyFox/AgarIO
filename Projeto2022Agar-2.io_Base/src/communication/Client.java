@@ -1,63 +1,85 @@
 package communication;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import game.NetworkPayload;
+
 public class Client {
 
-	private BufferedReader in;
-	private PrintWriter out;
+	private ObjectInputStream in;
+	private ObjectOutputStream out;
 	private Socket socket;
-	public static void main(String[] args) {
-		new Client().runClient();
+	
+	private String address;
+	private int port;
+	private int up;
+	private int down;
+	private int left;
+	private int right;
+	
+	public Client(String address, int port, int up, int down, int left, int right) {
+		this.address = address;
+		this.port = port;
+		this.up = up;
+		this.down = down;
+		this.left = left;
+		this.right = right;
 	}
 
 	public void runClient() {
 		try {
 			connectToServer();
-			sendMessages();
-		} catch (IOException e)
-		{
-			// ERRO...
+			
+			System.out.println("Inicio de cliente:");
+			
+			while(!socket.isClosed()) {
+//				sendMessages();
+				receiveMessages();
+			}
 		}
-		finally {//a fechar...
+		catch (IOException e)
+		{
+			System.out.println(e.getMessage());
+		}
+		finally {
 			try {
 				socket.close();
 			}
 			catch (IOException e) {
-				 
+				System.out.println(e.getMessage());
 			}
 		}
 	}
 
 	void connectToServer() throws IOException {
-		InetAddress endereco = InetAddress.getByName(null);
+		InetAddress endereco = InetAddress.getByName(address);
 		System.out.println("Endereco:" + endereco);
-		socket = new Socket(endereco, Server.PORTO);
+		socket = new Socket(endereco, port);
 		System.out.println("Socket:" + socket);
-		in = new BufferedReader(new InputStreamReader(
-				socket.getInputStream()));
-		out = new PrintWriter(new BufferedWriter(
-				new OutputStreamWriter(socket.getOutputStream())),
-				true);
+		
+		out = new ObjectOutputStream(socket.getOutputStream());
+		in = new ObjectInputStream(socket.getInputStream());
+	}
+
+	void receiveMessages() throws IOException {
+		
+		try {
+			System.out.println("Mensagem recebida pelo servidor:");
+			NetworkPayload net = (NetworkPayload)in.readObject();
+			System.out.println(net);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	void sendMessages() throws IOException {
-		for (int i = 0; i < 10; i++) {
-			out.println("Ola " + i);
-			String str = in.readLine();
-			System.out.println(str);
-			try {
-				Thread.sleep(3000);
-			} catch (InterruptedException e) {//...  
-			}
-		}
-		out.println("FIM");
+		
+	
 	}
 }
