@@ -1,17 +1,23 @@
 package communication;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import game.Game;
+import game.NetworkPayload;
 
 public class Server {
 
-	public class DealWithClient extends Thread {
+	private final int Port;
+
+	public Server(int port) {
+		this.Port = port;
+	}
+	
+	private class DealWithClient extends Thread {
 		
 		public DealWithClient(Socket socket) throws IOException {
 			doConnections(socket);
@@ -28,46 +34,50 @@ public class Server {
 			}
 		}
 		
-		private PrintWriter out;
+		private ObjectOutputStream out;
 
-		void doConnections(Socket socket) throws IOException {
-			in = new BufferedReader(new InputStreamReader(
-					socket.getInputStream()));
-			
-			out = new PrintWriter(new BufferedWriter(
-					new OutputStreamWriter(socket.getOutputStream())),
-					true);
+		private void doConnections(Socket socket) throws IOException {
+			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			out = new ObjectOutputStream(socket.getOutputStream());
 		}
 		
 		private void serve() throws IOException {
 			while (true) {
-				String str = in.readLine();
-				if (str.equals("FIM"))
-					break;
-				System.out.println("Eco:" + str);
-				out.println(str);
+				sendMessages();
+				receiveMessages();
+			}
+		}
+		
+		private void receiveMessages() throws IOException {
+			System.out.println("Mensagem recebida servidor vinda do cliente: " + in.readLine());
+		}
+		
+		private void sendMessages() throws IOException {
+			try {
+				NetworkPayload payload = new NetworkPayload(2, "ola");
+				out.writeObject(payload);
+				
+				Thread.sleep(Game.REFRESH_INTERVAL);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 	}
 	
-	public static final int PORTO = 8080;
-	
-	public static void main(String[] args) {
-		try {
-			new Server().startServing();
-		} catch (IOException e) {
-			// ...
-		}
-	}
-
 	public void startServing() throws IOException {
-		ServerSocket ss = new ServerSocket(PORTO);
+		ServerSocket ss = new ServerSocket(this.Port);
+		
 		try {
 			while(true) {
 				Socket socket = ss.accept();
 				new DealWithClient(socket).start();
-			}			
-		} finally {
+				System.out.println("Servidor iniciou.");
+			}
+		}
+		catch(Exception e) {
+			System.out.print(e.getMessage());
+		}
+		finally {
 			ss.close();
 		}
 	}

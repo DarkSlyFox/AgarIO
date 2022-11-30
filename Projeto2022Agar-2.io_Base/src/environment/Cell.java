@@ -81,6 +81,7 @@ public class Cell {
 					playerWhoWantsToMove.beginConflictWith(player);	
 					game.notifyChange();
 				}
+				
 				else if (this.player.isDead() && !playerWhoWantsToMove.isHumanPlayer()) {
 					// Thread que vai colocar o player outra vez a mover-se.
 					new Thread(new Runnable() {
