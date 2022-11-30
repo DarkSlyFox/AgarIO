@@ -1,8 +1,13 @@
 package game;
 
 
+import java.util.List;
 import java.util.Observable;
 import java.util.Random;
+import java.util.Vector;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import environment.Cell;
 import environment.Coordinate;
@@ -11,7 +16,7 @@ public class Game extends Observable {
 
 	public static final int DIMY = 5;
 	public static final int DIMX = 5;
-	private static final int NUM_PLAYERS = 0;
+	private static final int NUM_PLAYERS = 1;
 	private static final int NUM_FINISHED_PLAYERS_TO_END_GAME = 3;
 
 	public static final long REFRESH_INTERVAL = 300;
@@ -52,6 +57,8 @@ public class Game extends Observable {
 		for (i = 0; i != NUM_PLAYERS; i++) {
 			new Thread(new AutomaticPlayer(i + 1, this, (byte)generateRandomNumberBetween(1,3))).start();
 		}
+		
+		new Thread(new RealPlayer(i + 1, this)).start();
 	}
 
 	public synchronized Cell getCell(Coordinate at) {

@@ -1,5 +1,9 @@
 package gui;
 
+import environment.Coordinate;
+import environment.Direction;
+import game.Game;
+import game.Player;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -8,14 +12,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-
-import environment.Coordinate;
-import environment.Direction;
-import game.Game;
-import game.Player;
 
 /**
  * Creates a JComponent to display the game state.

@@ -1,16 +1,15 @@
 package gui;
 
-import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Random;
+
+import game.Game;
+import game.AutomaticPlayer;
 
 import javax.swing.JFrame;
 
-import communication.Client;
-import communication.Server;
 import environment.Direction;
-import game.Game;
 
 public class GameGuiMain implements Observer {
 	private JFrame frame = new JFrame("pcd.io");
@@ -38,37 +37,7 @@ public class GameGuiMain implements Observer {
 
 	public void init()  {
 		frame.setVisible(true);
-//		game.loadPlayers();
-	
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					System.out.println("Começou à espera 5s.");
-					Thread.sleep(5000);
-					System.out.println("Acabaram os 5s.");
-					
-					Client client = new Client("localhost", 8080,
-							KeyEvent.VK_W,
-							KeyEvent.VK_W,
-							KeyEvent.VK_W,
-							KeyEvent.VK_W);
-					
-					client.runClient();
-
-				} catch (InterruptedException e) {
-					System.out.println(e);
-				}
-			}
-		}).start();
-		
-		try {
-			new Server(8080).startServing();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
+		game.loadPlayers();
 	}
 	
 	public Direction getLastDirection() {

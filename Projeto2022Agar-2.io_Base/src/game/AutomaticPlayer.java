@@ -28,7 +28,7 @@ public class AutomaticPlayer extends Player {
 				Thread.sleep(SLEEP_CYCLE);
 			}
 			catch (InterruptedException e) {
-				System.out.println(e.getMessage());
+				System.out.println("Bateu nos bolos (1)");
 			}
 		}
 	}
