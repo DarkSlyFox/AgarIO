@@ -38,7 +38,7 @@ public class ClientGuiMain implements Observer {
 
 	public void init()  {
 		frame.setVisible(true);
-		new Client("localhost", 8080, KeyEvent.VK_W, KeyEvent.VK_W, KeyEvent.VK_W, KeyEvent.VK_W).startClient();
+		new Client(game).startClient("localhost", 8080, KeyEvent.VK_W, KeyEvent.VK_W, KeyEvent.VK_W, KeyEvent.VK_W);
 	}
 	
 	public Direction getLastDirection() {

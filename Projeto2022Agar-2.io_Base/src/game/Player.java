@@ -85,6 +85,10 @@ public abstract class Player extends Thread {
 		return this.currentStrength == Game.MAX_STRENGTH;
 	}
 	
+	public byte getStrength() {
+		return currentStrength;
+	}
+	
 	public String getPlayerName() {
 		return "Player " + this.id;
 	}

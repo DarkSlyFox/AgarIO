@@ -1,6 +1,8 @@
 package game;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Random;
 
@@ -9,15 +11,15 @@ import environment.Coordinate;
 
 public class Game extends Observable {
 
-	public static final int DIMY = 5;
-	public static final int DIMX = 5;
-	private static final int NUM_PLAYERS = 0;
+	public static final int DIMY = 3;
+	public static final int DIMX = 3;
+	private static final int NUM_PLAYERS = 2;
 	private static final int NUM_FINISHED_PLAYERS_TO_END_GAME = 3;
 
-	public static final long REFRESH_INTERVAL = 300;
+	public static final long REFRESH_INTERVAL = 400;
 	public static final double MAX_INITIAL_STRENGTH = 3;
 	public static final long MAX_WAITING_TIME_FOR_MOVE = 2000;
-	public static final long INITIAL_WAITING_TIME = 0;
+	public static final long INITIAL_WAITING_TIME = 5000;
 	public static final int MAX_STRENGTH = 10;
 	
 	protected Cell[][] board;
@@ -41,11 +43,32 @@ public class Game extends Observable {
 		this.getCell(newCoordination).movePlayer(player);
 	}
 	
-	public void loadPlayers() {
+	public List<ClientPlayer> getClientPlayers() {
+
+		List<ClientPlayer> clientPlayers = new ArrayList<>();
 		
-//		try {
-//			Thread.sleep(INITIAL_WAITING_TIME);
-//		} catch (InterruptedException e) {}
+		for (int x = 0; x < Game.DIMX; x++) {
+			for (int y = 0; y < Game.DIMY; y++) {
+				Player p = board[x][y].getPlayer();
+				Coordinate coordinate = board[x][y].getPosition();
+				
+				if (board[x][y].isOcupied()) {
+					clientPlayers.add(new ClientPlayer(p.getStrength(),
+							coordinate.x, coordinate.y,
+							p.isHumanPlayer(), board[x][y].isOcupied()));
+				}
+				else {
+//					clientPlayers.add(new ClientPlayer((byte)0,
+//							coordinate.x, coordinate.y,
+//							false, board[x][y].isOcupied()));
+				}
+			}
+		}
+		
+		return clientPlayers;
+	}
+	
+	public void loadPlayers() {
 		
 		int i;
 		
@@ -54,7 +77,7 @@ public class Game extends Observable {
 		}
 	}
 
-	public synchronized Cell getCell(Coordinate at) {
+	public Cell getCell(Coordinate at) {
 		return board[at.x][at.y];
 	}
 	

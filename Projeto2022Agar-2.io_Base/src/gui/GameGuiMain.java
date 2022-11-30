@@ -11,6 +11,8 @@ import communication.Client;
 import communication.Server;
 import environment.Direction;
 import game.Game;
+import game.Player;
+import game.RealPlayer;
 
 public class GameGuiMain implements Observer {
 	private JFrame frame = new JFrame("pcd.io");
@@ -38,7 +40,19 @@ public class GameGuiMain implements Observer {
 
 	public void init()  {
 		frame.setVisible(true);
-		game.loadPlayers();
+		
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(Game.INITIAL_WAITING_TIME);
+					game.loadPlayers();
+				} catch (InterruptedException e) {
+					System.out.println(e);
+				}
+			}
+		}).start();	
 		
 		try {
 			new Server(8080, game).startServing();

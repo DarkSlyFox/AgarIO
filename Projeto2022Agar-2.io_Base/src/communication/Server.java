@@ -6,8 +6,14 @@ import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+
+import environment.Coordinate;
+import game.ClientPlayer;
 import game.Game;
 import game.NetworkPayload;
+import game.Player;
 import game.RealPlayer;
 
 public class Server {
@@ -15,9 +21,9 @@ public class Server {
 	private final int port;
 	private final Game game;
 
-	public Server(int port, Game g) {
+	public Server(int port, Game game) {
 		this.port = port;
-		this.game = g;
+		this.game = game;
 	}
 	
 	private class DealWithClient extends Thread {
@@ -26,6 +32,9 @@ public class Server {
 		
 		public DealWithClient(Socket socket) throws IOException {
 			this.clientPort = Integer.parseInt(socket.getRemoteSocketAddress().toString().split(":")[1]);
+			
+			new RealPlayer(this.clientPort, game).start();
+			
 			doConnections(socket);
 		}
 		
@@ -49,8 +58,6 @@ public class Server {
 		
 		private void serve() throws IOException {
 			
-			new RealPlayer(this.clientPort, game).start();
-			
 			while (true) {
 				sendMessages();
 				receiveMessages();
@@ -60,16 +67,17 @@ public class Server {
 		private void receiveMessages() throws IOException {
 			if (in.ready()) {
 				System.out.println("Mensagem recebida servidor vinda do cliente: " + in.readLine());
-				
 			}
 		}
 		
 		private void sendMessages() throws IOException {
 			try {
-				NetworkPayload payload = new NetworkPayload(2, "ola");
+				List<ClientPlayer> clientPlayers = game.getClientPlayers();
+				NetworkPayload payload = new NetworkPayload(clientPlayers);
+				 
 				out.writeObject(payload);
 				out.flush();
-				
+			
 				System.out.println("Mensagem enviada pelo servidor: ");
 				
 				Thread.sleep(Game.REFRESH_INTERVAL);
