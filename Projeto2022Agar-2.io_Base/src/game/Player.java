@@ -102,6 +102,23 @@ public abstract class Player extends Thread {
 	public void setCoordinate(Coordinate newCoordinate) {
 		this.coordinate = newCoordinate;
 	}
+	
+	public void interruptPlayer() {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					System.out.println("Começou à espera 2s.");
+					Thread.sleep(2000);
+					System.out.println("Acabaram os 2s.");
+					Thread.currentThread().interrupt();
+				} catch (InterruptedException e) {
+					System.out.println(e);
+				}
+			}
+		}).start();
+	}
 
 	@Override
 	public int hashCode() {

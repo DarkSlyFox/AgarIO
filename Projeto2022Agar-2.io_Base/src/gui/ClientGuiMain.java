@@ -13,7 +13,7 @@ import environment.Direction;
 import game.Game;
 
 public class ClientGuiMain implements Observer {
-	private JFrame frame = new JFrame("pcd.io");
+	private JFrame frame = new JFrame("Client");
 	private BoardJComponent boardGui;
 	private Game game;
 
@@ -38,7 +38,10 @@ public class ClientGuiMain implements Observer {
 
 	public void init()  {
 		frame.setVisible(true);
-		new Client(game, boardGui).startClient("localhost", 8080, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D);
+		new Client(game, boardGui).startClient("localhost", 8080, KeyEvent.VK_W,
+				KeyEvent.VK_S,
+				KeyEvent.VK_A,
+				KeyEvent.VK_D);
 	}
 	
 	public Direction getLastDirection() {

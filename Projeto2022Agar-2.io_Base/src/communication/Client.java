@@ -24,14 +24,14 @@ public class Client {
 	private Socket socket;
 	private Game game;
 	private BoardJComponent boardJComponent;
-	
+
 	public Client(Game game, BoardJComponent boardJComponent) {
 		this.game = game;
 		this.boardJComponent = boardJComponent;
 	}
 	
 	private class DealWithServer extends Thread {
-		
+
 		private String address;
 		private int port;
 		private int up;
@@ -55,27 +55,37 @@ public class Client {
 				
 				System.out.println("Inicio de cliente:");
 				
-				while(!socket.isClosed()) {
-					try {
-						receiveMessages();
-						sendMessages();
-						
-						Thread.sleep(Game.REFRESH_INTERVAL);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+				new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+						try {
+							receiveMessages();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
-				}
+				}).start();
+				
+				new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+						try {
+							sendMessages();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}).start();
 			}
 			catch (IOException e)
 			{
 				System.out.println(e.getMessage());
-			}
-			finally {
 				try {
 					socket.close();
-				}
-				catch (IOException e) {
-					System.out.println(e.getMessage());
+				} catch (IOException e1) {
+					e1.printStackTrace();
 				}
 			}
 		}
@@ -120,57 +130,42 @@ public class Client {
 
 	private void receiveMessages() throws IOException {
 		
-		try {
-			System.out.println("Mensagem recebida pelo servidor:");
-			NetworkPayload net = (NetworkPayload)in.readObject();
-			System.out.println(net);
-			
-			// testar uma thread autonoma para reduzir o overhead.
-//			new Thread(new Runnable() {
-//
-//				@Override
-//				public void run() {
-//					try {
-//						Thread.sleep(Game.REFRESH_INTERVAL);
-						
-						for (int x = 0; x < Game.DIMX; x++) {
-							for (int y = 0; y < Game.DIMY; y++) {
-								Cell currentCell = game.getCell(new Coordinate(x, y));
-								currentCell.clearPlayer();
-							}
-						}
-//					} catch (InterruptedException e) {
-//						System.out.println(e);
-//					}
-//				}
-//			}).start();
-			
-			for (ClientPlayer cp : net.clientPlayers) {
-				Cell currentCell = game.getCell(new Coordinate(cp.x, cp.y));
-				currentCell.setPlayer(new MockClientPlayer(1, game, cp.strength, cp.isPlayer)); 
-			}
+		while(!socket.isClosed()) {
+			try {
+//				System.out.println("Mensagem recebida pelo servidor:");
+				NetworkPayload net = (NetworkPayload)in.readObject();
 
-			System.out.println("Fim de repopulação.");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+				for (int x = 0; x < Game.DIMX; x++) {
+					for (int y = 0; y < Game.DIMY; y++) {
+						Cell currentCell = game.getCell(new Coordinate(x, y));
+						currentCell.clearPlayer();
+					}
+				}
+
+				for (ClientPlayer cp : net.clientPlayers) {
+					Cell currentCell = game.getCell(new Coordinate(cp.x, cp.y));
+					currentCell.setPlayer(new MockClientPlayer(1, game, cp.strength, cp.isPlayer)); 
+				}
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	private void sendMessages() throws IOException {
 
-		Direction d = boardJComponent.getLastPressedDirection();
-		
-		if (d != null) {
-			System.out.println("Envio de mensagem por parte do cliente:");
-			out.println(d.toString());
-			out.flush();
-			boardJComponent.clearLastPressedDirection();
+		while(!socket.isClosed()) {
+
+			Direction d = boardJComponent.getLastPressedDirection();
+			
+			if (d != null) {
+				System.out.println("Envio de mensagem por parte do cliente:");
+				out.println(d);
+				out.flush();
+				boardJComponent.clearLastPressedDirection();
+			}
 		}
 	}
-	
-	
-	
-	
 }

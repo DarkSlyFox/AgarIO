@@ -33,27 +33,32 @@ public class Cell {
 		return player;
 	}
 
-	public synchronized void setPlayer(Player playerWhoWantsToMove) {
+	public void setPlayer(Player playerWhoWantsToMove) {
+		
+		lock.lock();
 		
 		try {
 			while (this.isOcupied()) {
 				System.out.println("Jogador que pretende se mover " + playerWhoWantsToMove.getPlayerName());
 				System.out.println("Jogador que ocupa o lugar " + this.player);
-				wait();
+				isPositionOccupied.await();
 			}
 			
 			playerWhoWantsToMove.setCoordinate(this.position);
 			this.player = playerWhoWantsToMove;
 			
 			game.notifyChange();
-			notifyAll();
+			isPositionOccupied.signalAll();
 		
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		finally {
+			lock.unlock();
+		}
 	}
 	
-	public void movePlayer(final Player playerWhoWantsToMove) {
+	public /*synchronized*/ void movePlayer(final Player playerWhoWantsToMove) {
 	
 		Cell _oldCell = playerWhoWantsToMove.getCurrentCell();
 
@@ -83,22 +88,16 @@ public class Cell {
 				}
 				
 				else if (this.player.isDead() && !playerWhoWantsToMove.isHumanPlayer()) {
+//					Thread.currentThread():
 					// Thread que vai colocar o player outra vez a mover-se.
-					new Thread(new Runnable() {
-
-						@Override
-						public void run() {
-							try {
-								System.out.println("Começou à espera 2s.");
-								Thread.sleep(2000);
-								System.out.println("Acabaram os 2s.");
-								
-								playerWhoWantsToMove.interrupt();
-							} catch (InterruptedException e) {
-								System.out.println(e);
-							}
-						}
-					}).start();
+					playerWhoWantsToMove.interruptPlayer();
+					
+//					try {
+//						wait();
+//					} catch (InterruptedException e) {
+//						System.out.println("acabou espera wait");
+//						return;
+//					}
 				}
 			}
 		}

@@ -23,7 +23,7 @@ public class RealPlayer extends Player  {
 	public void run() {
 		game.addPlayerToGame(this);
 				
-		while(true) {
+		while(this.canMove()) {
 			
 			try {
 				if (lastDirection != null) {
@@ -32,6 +32,7 @@ public class RealPlayer extends Player  {
 	
 					game.movePlayer(this, newCoordinate);
 					
+					// Limpamos a última direção para ele ficar novamente em espera.
 					lastDirection = null;
 				}
 				Thread.sleep(Game.REFRESH_INTERVAL);

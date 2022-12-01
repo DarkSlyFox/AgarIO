@@ -15,7 +15,7 @@ import game.Player;
 import game.RealPlayer;
 
 public class GameGuiMain implements Observer {
-	private JFrame frame = new JFrame("pcd.io");
+	private JFrame frame = new JFrame("Server");
 	private BoardJComponent boardGui;
 	private Game game;
 

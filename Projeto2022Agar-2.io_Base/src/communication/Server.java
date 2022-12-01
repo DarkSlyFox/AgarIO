@@ -61,39 +61,59 @@ public class Server {
 		
 		private void serve() throws IOException {
 			
-			while (true) {
-				sendMessages();
-				receiveMessages();
-			}
+			System.out.println("Vai iniciar o servidor.");
+			
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					try {
+						sendMessages();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
+			
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					try {
+						receiveMessages();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
 		}
 		
 		private void receiveMessages() throws IOException {
-			if (in.ready()) {
-				System.out.println("Mensagem recebida servidor vinda do cliente: ");
 				
-				String direction = in.readLine();
-				
-				System.out.println(direction);
-				
-				this.realPlayer.setDirection(Direction.UP);
-				
-				System.out.println(direction);
+			while(true) {
+				if (in.ready()) {
+					System.out.println("Mensagem recebida servidor vinda do cliente: ");
+					this.realPlayer.setDirection(Direction.translateDirection(in.readLine()));
+				}
 			}
 		}
 		
 		private void sendMessages() throws IOException {
-			try {
-				List<ClientPlayer> clientPlayers = game.getClientPlayers();
-				NetworkPayload payload = new NetworkPayload(clientPlayers);
-				 
-				out.writeObject(payload);
-				out.flush();
 			
-				System.out.println("Mensagem enviada pelo servidor: ");
+			while(true) {
+				try {
+					List<ClientPlayer> clientPlayers = game.getClientPlayers();
+					NetworkPayload payload = new NetworkPayload(clientPlayers);
+					 
+					out.writeObject(payload);
+					out.flush();
 				
-				Thread.sleep(Game.REFRESH_INTERVAL);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+					System.out.println("Mensagem enviada pelo servidor: ");
+					
+					Thread.sleep(Game.REFRESH_INTERVAL);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

@@ -52,7 +52,7 @@ public class BoardJComponent extends JComponent implements KeyListener {
 		for (int x = 1; x < Game.DIMX; x++) {
 			g.drawLine( (int)(x * cellWidth),0, (int)(x* cellWidth), getHeight());
 		}
-		for (int x = 0; x < Game.DIMX; x++) 
+		for (int x = 0; x < Game.DIMX; x++) {
 			for (int y = 0; y < Game.DIMY; y++) {
 				Coordinate p = new Coordinate(x, y);
 
@@ -88,29 +88,14 @@ public class BoardJComponent extends JComponent implements KeyListener {
 							(int) ((p.x + .2) * cellWidth),
 							(int) ((p.y + .9) * cellHeight));
 				}
-
 			}
+		}
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		switch(e.getKeyCode()){
-		case KeyEvent.VK_LEFT :
-			lastPressedDirection=environment.Direction.LEFT;
-			break;
-		case KeyEvent.VK_RIGHT:
-			lastPressedDirection=environment.Direction.RIGHT;
-			break;
-		case KeyEvent.VK_UP:
-			lastPressedDirection=environment.Direction.UP;
-			break;
-		case KeyEvent.VK_DOWN:
-			lastPressedDirection=environment.Direction.DOWN;
-			break;
-		}
-		System.out.println(lastPressedDirection);
+		lastPressedDirection = Direction.translateDirection(e.getKeyCode());
 	}
-
 
 	@Override
 	public void keyReleased(KeyEvent e) {
