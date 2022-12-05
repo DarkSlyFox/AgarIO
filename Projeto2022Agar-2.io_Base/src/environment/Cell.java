@@ -58,7 +58,7 @@ public class Cell {
 		}
 	}
 	
-	public /*synchronized*/ void movePlayer(final Player playerWhoWantsToMove) {
+	public synchronized void movePlayer(Player playerWhoWantsToMove) {
 	
 		Cell _oldCell = playerWhoWantsToMove.getCurrentCell();
 
@@ -88,16 +88,15 @@ public class Cell {
 				}
 				
 				else if (this.player.isDead() && !playerWhoWantsToMove.isHumanPlayer()) {
-//					Thread.currentThread():
 					// Thread que vai colocar o player outra vez a mover-se.
-					playerWhoWantsToMove.interruptPlayer();
+					new SoloThread(Thread.currentThread()).start();
 					
-//					try {
-//						wait();
-//					} catch (InterruptedException e) {
-//						System.out.println("acabou espera wait");
-//						return;
-//					}
+					try {
+						wait();
+					} catch (InterruptedException e) {
+						System.out.println("acabou espera wait");
+						return;
+					}
 				}
 			}
 		}
