@@ -38,32 +38,32 @@ public abstract class Player extends Thread {
 		this.SLEEP_CYCLE = strength * Game.REFRESH_INTERVAL;
 	}
 	
-	public void notifyPlayer() {
-		this.notifyAll();
-	}
+//	public void notifyPlayer() {
+//		this.notifyAll();
+//	}
 	
 	public abstract boolean isHumanPlayer();
 	
 	public void beginConflictWith(Player p) {
-		int _playerWhoWantsToMoveStrength = getCurrentStrength();
-		int _playerInCurrentCellStrength = p.getCurrentStrength();
+		byte _playerWhoWantsToMoveStrength = getCurrentStrength();
+		byte _playerInCurrentCellStrength = p.getCurrentStrength();
 		
 		// Se o player que se quer mover tem + força que o que se encontra na célula.
 		if (_playerWhoWantsToMoveStrength > _playerInCurrentCellStrength) {
-			this.currentStrength = (byte)Math.min(Game.MAX_STRENGTH, _playerInCurrentCellStrength + this.currentStrength);
+			this.addStrength(_playerInCurrentCellStrength);
 			p.currentStrength = 0;
 		}
 		else if (_playerWhoWantsToMoveStrength < _playerInCurrentCellStrength) {
-			p.currentStrength = (byte)Math.min(Game.MAX_STRENGTH, _playerWhoWantsToMoveStrength + p.currentStrength);
+			p.addStrength(_playerWhoWantsToMoveStrength);
 			this.currentStrength = 0;
 		}
 		else {
 			if(new Random().nextBoolean()) {
-				this.currentStrength = (byte)Math.min(Game.MAX_STRENGTH, _playerInCurrentCellStrength + this.currentStrength);
+				this.addStrength(_playerInCurrentCellStrength);
 				p.currentStrength = 0;
 			}
 			else {
-				p.currentStrength = (byte)Math.min(Game.MAX_STRENGTH, _playerWhoWantsToMoveStrength + p.currentStrength);
+				p.addStrength(_playerWhoWantsToMoveStrength);
 				this.currentStrength = 0;
 			}
 		}
@@ -78,7 +78,7 @@ public abstract class Player extends Thread {
 	}
 	
 	public boolean canMove() {
-		return isPlayerAlive() && !hasMaxStrength();
+		return isPlayerAlive() && !hasMaxStrength() && !game.gameOver();
 	}
 	
 	public boolean hasMaxStrength() {
@@ -87,6 +87,15 @@ public abstract class Player extends Thread {
 	
 	public byte getStrength() {
 		return currentStrength;
+	}
+	
+	private void addStrength(byte strength) {
+		
+		this.currentStrength = (byte)Math.min(Game.MAX_STRENGTH, strength + this.currentStrength);
+		
+		if (this.hasMaxStrength()) {
+			game.addWinner();
+		}
 	}
 	
 	public String getPlayerName() {

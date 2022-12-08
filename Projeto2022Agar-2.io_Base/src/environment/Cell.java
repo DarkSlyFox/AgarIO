@@ -1,5 +1,6 @@
 package environment;
 
+import java.io.IOException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -14,6 +15,7 @@ public class Cell {
 	
 	public Lock lock = new ReentrantLock();
 	public Condition isPositionOccupied = lock.newCondition();
+	public Condition isBlocked = lock.newCondition();
 	
 	public Cell(Coordinate position, Game g) {
 		super();
@@ -39,8 +41,8 @@ public class Cell {
 		
 		try {
 			while (this.isOcupied()) {
-				System.out.println("Jogador que pretende se mover " + playerWhoWantsToMove.getPlayerName());
-				System.out.println("Jogador que ocupa o lugar " + this.player);
+//				System.out.println("Jogador que pretende se mover " + playerWhoWantsToMove.getPlayerName());
+//				System.out.println("Jogador que ocupa o lugar " + this.player);
 				isPositionOccupied.await();
 			}
 			
@@ -48,9 +50,9 @@ public class Cell {
 			this.player = playerWhoWantsToMove;
 			
 			game.notifyChange();
-			isPositionOccupied.signalAll();
-		
-		} catch (InterruptedException e) {
+			isPositionOccupied.signalAll();		
+		}
+		catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		finally {
@@ -58,7 +60,7 @@ public class Cell {
 		}
 	}
 	
-	public synchronized void movePlayer(Player playerWhoWantsToMove) {
+	public void movePlayer(Player playerWhoWantsToMove) throws InterruptedException {
 	
 		Cell _oldCell = playerWhoWantsToMove.getCurrentCell();
 
@@ -78,24 +80,23 @@ public class Cell {
 			
 			else if (!this.player.equals(playerWhoWantsToMove)) {
 				
-				System.out.println("Jogador OldPosition: " + playerWhoWantsToMove);
-				System.out.println("Jogador NewPosition: " + this.player);
+//				System.out.println("Jogador OldPosition: " + playerWhoWantsToMove);
+//				System.out.println("Jogador NewPosition: " + this.player);
 				
 				if (this.player.isPlayerAlive() && !this.player.hasMaxStrength()) {
-					System.out.println("Inicio de conflito entre jogadores");
+//					System.out.println("Inicio de conflito entre jogadores");
 					playerWhoWantsToMove.beginConflictWith(player);	
 					game.notifyChange();
 				}
 				
 				else if (this.player.isDead() && !playerWhoWantsToMove.isHumanPlayer()) {
-					// Thread que vai colocar o player outra vez a mover-se.
-					new SoloThread(Thread.currentThread()).start();
+
+					new SoloThread(playerWhoWantsToMove).start();
 					
 					try {
-						wait();
+						isBlocked.await();
 					} catch (InterruptedException e) {
 						System.out.println("acabou espera wait");
-						return;
 					}
 				}
 			}

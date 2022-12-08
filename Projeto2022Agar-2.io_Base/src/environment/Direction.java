@@ -29,7 +29,7 @@ public enum Direction {
 	
 	public static Direction translateDirection(int keyCode) {
 		switch(keyCode) {
-			case KeyEvent.VK_LEFT :
+			case KeyEvent.VK_LEFT:
 			case KeyEvent.VK_A:
 				return environment.Direction.LEFT;
 			case KeyEvent.VK_RIGHT:

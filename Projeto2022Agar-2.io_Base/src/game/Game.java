@@ -8,21 +8,26 @@ import java.util.Random;
 
 import environment.Cell;
 import environment.Coordinate;
+import environment.CountDownLatch;
 
 public class Game extends Observable {
 
-	public static final int DIMY = 10;
-	public static final int DIMX = 10;
-	private static final int NUM_PLAYERS = 20;
-	private static final int NUM_FINISHED_PLAYERS_TO_END_GAME = 3;
+	public static final int DIMY = 20;
+	public static final int DIMX = 20;
+	private static final int NUM_PLAYERS = 130;
+	private static final int NUM_FINISHED_PLAYERS_TO_END_GAME = 1;
 
-	public static final long REFRESH_INTERVAL = 400;
-	public static final double MAX_INITIAL_STRENGTH = 3;
+	public static final long REFRESH_INTERVAL = 100;
+	public static final double MAX_INITIAL_STRENGTH = 9;
 	public static final long MAX_WAITING_TIME_FOR_MOVE = 2000;
 	public static final long INITIAL_WAITING_TIME = 5000;
 	public static final int MAX_STRENGTH = 10;
 	
 	protected Cell[][] board;
+	
+	private CountDownLatch counter;
+	private ArrayList<Thread> threads;
+	private boolean gameOver = false;
 	
 	public Game() {
 		board = new Cell[Game.DIMX][Game.DIMY];
@@ -32,15 +37,41 @@ public class Game extends Observable {
 				board[x][y] = new Cell(new Coordinate(x, y),this);
 	}
 	
-	/** 
-	 * @param player 
-	 */
-	public void addPlayerToGame(Player player) {
-		getRandomCell().setPlayer(player);		
+	public void init() {
+		counter = new CountDownLatch(NUM_FINISHED_PLAYERS_TO_END_GAME);
+		threads = new ArrayList<>();
+		
+		loadPlayers();
+		
+		try {
+			counter.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println("acabou jéssica.");
+		gameOver = true;
+		
+		for(Thread e : threads) {
+			e.interrupt();
+		}
 	}
 	
-	public void movePlayer(Player player, Coordinate newCoordination) {
+	public void addPlayerToGame(Player player) {
+		getRandomCell().setPlayer(player);	
+		threads.add(player);
+	}
+	
+	public void movePlayer(Player player, Coordinate newCoordination) throws InterruptedException {
 		this.getCell(newCoordination).movePlayer(player);
+	}
+	
+	public void addWinner() {
+		counter.countDown();
+	}
+	
+	public boolean gameOver() {
+		return gameOver;
 	}
 	
 	public List<ClientPlayer> getClientPlayers() {
@@ -57,11 +88,6 @@ public class Game extends Observable {
 							coordinate.x, coordinate.y,
 							p.isHumanPlayer(), board[x][y].isOcupied()));
 				}
-				else {
-//					clientPlayers.add(new ClientPlayer((byte)0,
-//							coordinate.x, coordinate.y,
-//							false, board[x][y].isOcupied()));
-				}
 			}
 		}
 		
@@ -69,11 +95,8 @@ public class Game extends Observable {
 	}
 	
 	public void loadPlayers() {
-		
-		int i;
-		
-		for (i = 0; i != NUM_PLAYERS; i++) {
-			new Thread(new AutomaticPlayer(i + 1, this, (byte)generateRandomNumberBetween(1,3))).start();
+		for (int i = 0; i != NUM_PLAYERS; i++) {
+			new AutomaticPlayer(i + 1, this, (byte)generateRandomNumberBetween(1,3)).start();
 		}
 	}
 

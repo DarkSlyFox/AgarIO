@@ -34,7 +34,6 @@ public class GameGuiMain implements Observer {
 		frame.setSize(800,800);
 		frame.setLocation(0, 150);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
 		frame.setLocationRelativeTo(null);
 	}
 
@@ -47,18 +46,18 @@ public class GameGuiMain implements Observer {
 			public void run() {
 				try {
 					Thread.sleep(Game.INITIAL_WAITING_TIME);
-					game.loadPlayers();
+					game.init();
 				} catch (InterruptedException e) {
 					System.out.println(e);
 				}
 			}
 		}).start();	
 		
-		try {
-			new Server(8080, game).startServing();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+//		try {
+//			new Server(8080, game).startServing();
+//		} catch (IOException e1) {
+//			e1.printStackTrace();
+//		}
 	}
 	
 	public Direction getLastDirection() {

@@ -61,7 +61,7 @@ public class Server {
 		
 		private void serve() throws IOException {
 			
-			System.out.println("Vai iniciar o servidor.");
+//			System.out.println("Vai iniciar o servidor.");
 			
 			new Thread(new Runnable() {
 
@@ -92,7 +92,7 @@ public class Server {
 				
 			while(true) {
 				if (in.ready()) {
-					System.out.println("Mensagem recebida servidor vinda do cliente: ");
+//					System.out.println("Mensagem recebida servidor vinda do cliente: ");
 					this.realPlayer.setDirection(Direction.translateDirection(in.readLine()));
 				}
 			}
@@ -108,7 +108,7 @@ public class Server {
 					out.writeObject(payload);
 					out.flush();
 				
-					System.out.println("Mensagem enviada pelo servidor: ");
+//					System.out.println("Mensagem enviada pelo servidor: ");
 					
 					Thread.sleep(Game.REFRESH_INTERVAL);
 				} catch (InterruptedException e) {
@@ -125,7 +125,7 @@ public class Server {
 			while(true) {
 				Socket socket = ss.accept();
 				new DealWithClient(socket).start();
-				System.out.println("Servidor iniciou.");
+//				System.out.println("Servidor iniciou.");
 			}
 		}
 		catch(Exception e) {

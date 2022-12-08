@@ -103,9 +103,9 @@ public class Client {
 
 	private void connectToServer(String address, int port) throws IOException {
 		InetAddress endereco = InetAddress.getByName(address);
-		System.out.println("Endereco:" + endereco);
+//		System.out.println("Endereco:" + endereco);
 		socket = new Socket(endereco, port);
-		System.out.println("Socket:" + socket);
+//		System.out.println("Socket:" + socket);
 		
 		in = new ObjectInputStream(socket.getInputStream());
 
@@ -161,7 +161,7 @@ public class Client {
 			Direction d = boardJComponent.getLastPressedDirection();
 			
 			if (d != null) {
-				System.out.println("Envio de mensagem por parte do cliente:");
+//				System.out.println("Envio de mensagem por parte do cliente:");
 				out.println(d);
 				out.flush();
 				boardJComponent.clearLastPressedDirection();

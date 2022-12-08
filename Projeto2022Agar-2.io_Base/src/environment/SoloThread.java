@@ -13,9 +13,12 @@ public class SoloThread extends Thread {
 	@Override
 	public void run() {
 		try {
-			System.out.println("Começou à espera 2s.");
+//			System.out.println("Começou à espera 2s.");
 			Thread.sleep(2000);
-			System.out.println("Acabaram os 2s.");
+//			System.out.println("Acabaram os 2s.");
+			
+			
+//			p.notifyAll();
 			p.interrupt();
 		} catch (InterruptedException e) {
 			System.out.println(e);

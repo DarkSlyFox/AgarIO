@@ -17,19 +17,27 @@ public class AutomaticPlayer extends Player {
 	public void run() {
 		
 		game.addPlayerToGame(this);
-		
-		while(this.canMove()) {
-			try {
-				Coordinate randomCoordinate = Direction.getRandomDirection();
-				Coordinate newCoordinate = this.getCurrentCell().getPosition().sumCoordinates(randomCoordinate);
-
-				game.movePlayer(this, newCoordinate);
 				
-				Thread.sleep(SLEEP_CYCLE);
+		try {
+
+			while(this.canMove()) {
+				
+				//if (this.canMove()) {
+
+					Coordinate randomCoordinate = Direction.getRandomDirection();
+					Coordinate newCoordinate = this.getCurrentCell().getPosition().sumCoordinates(randomCoordinate);
+		
+					game.movePlayer(this, newCoordinate);
+					
+					Thread.sleep(SLEEP_CYCLE);
+				//}
 			}
-			catch (InterruptedException e) {
-				System.out.println(e.getMessage());
-			}
+			
 		}
+		catch (InterruptedException e) {
+			System.out.println("Terminou Thread " + this.getId());
+			return;
+		}
+		
 	}
 }
