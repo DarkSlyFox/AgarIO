@@ -35,6 +35,8 @@ public class Server {
 		public DealWithClient(Socket socket) throws IOException {
 			this.clientPort = Integer.parseInt(socket.getRemoteSocketAddress().toString().split(":")[1]);
 			
+			System.out.println(clientPort);
+			
 			this.realPlayer =  new RealPlayer(this.clientPort, game);
 			this.realPlayer.start();
 			
@@ -92,7 +94,7 @@ public class Server {
 				
 			while(true) {
 				if (in.ready()) {
-//					System.out.println("Mensagem recebida servidor vinda do cliente: ");
+					System.out.println("Mensagem recebida servidor vinda do cliente: ");
 					this.realPlayer.setDirection(Direction.translateDirection(in.readLine()));
 				}
 			}

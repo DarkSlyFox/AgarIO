@@ -27,8 +27,8 @@ public class RealPlayer extends Player  {
 			
 			try {
 				if (lastDirection != null) {
-					Coordinate randomCoordinate = lastDirection.getVector();
-					Coordinate newCoordinate = this.getCurrentCell().getPosition().sumCoordinates(randomCoordinate);
+					Coordinate nextCoordinate = lastDirection.getVector();
+					Coordinate newCoordinate = this.getCurrentCell().getPosition().sumCoordinates(nextCoordinate);
 	
 					game.movePlayer(this, newCoordinate);
 					

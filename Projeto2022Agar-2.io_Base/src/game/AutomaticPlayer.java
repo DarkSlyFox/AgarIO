@@ -22,15 +22,12 @@ public class AutomaticPlayer extends Player {
 
 			while(this.canMove()) {
 				
-				//if (this.canMove()) {
-
-					Coordinate randomCoordinate = Direction.getRandomDirection();
-					Coordinate newCoordinate = this.getCurrentCell().getPosition().sumCoordinates(randomCoordinate);
-		
-					game.movePlayer(this, newCoordinate);
-					
-					Thread.sleep(SLEEP_CYCLE);
-				//}
+				Coordinate randomCoordinate = Direction.getRandomDirection();
+				Coordinate newCoordinate = this.getCurrentCell().getPosition().sumCoordinates(randomCoordinate);
+	
+				game.movePlayer(this, newCoordinate);
+				
+				Thread.sleep(SLEEP_CYCLE);
 			}
 			
 		}

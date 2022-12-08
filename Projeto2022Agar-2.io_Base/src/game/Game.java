@@ -12,12 +12,12 @@ import environment.CountDownLatch;
 
 public class Game extends Observable {
 
-	public static final int DIMY = 20;
-	public static final int DIMX = 20;
-	private static final int NUM_PLAYERS = 130;
+	public static final int DIMY = 10;
+	public static final int DIMX = 10;
+	private static final int NUM_PLAYERS = 10;
 	private static final int NUM_FINISHED_PLAYERS_TO_END_GAME = 1;
 
-	public static final long REFRESH_INTERVAL = 100;
+	public static final long REFRESH_INTERVAL = 400;
 	public static final double MAX_INITIAL_STRENGTH = 9;
 	public static final long MAX_WAITING_TIME_FOR_MOVE = 2000;
 	public static final long INITIAL_WAITING_TIME = 5000;
@@ -35,11 +35,12 @@ public class Game extends Observable {
 		for (int x = 0; x < Game.DIMX; x++) 
 			for (int y = 0; y < Game.DIMY; y++) 
 				board[x][y] = new Cell(new Coordinate(x, y),this);
+		
+		counter = new CountDownLatch(NUM_FINISHED_PLAYERS_TO_END_GAME);
+		threads = new ArrayList<>();
 	}
 	
 	public void init() {
-		counter = new CountDownLatch(NUM_FINISHED_PLAYERS_TO_END_GAME);
-		threads = new ArrayList<>();
 		
 		loadPlayers();
 		
@@ -49,7 +50,7 @@ public class Game extends Observable {
 			e.printStackTrace();
 		}
 		
-		System.out.println("acabou jéssica.");
+		System.out.println("acabou.");
 		gameOver = true;
 		
 		for(Thread e : threads) {

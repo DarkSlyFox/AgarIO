@@ -72,7 +72,12 @@ public class Client {
 					@Override
 					public void run() {
 						try {
-							sendMessages();
+							while(!socket.isClosed()) {
+
+								if (canCommunicate()) {
+									sendMessages();
+								}
+							}
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
@@ -88,6 +93,12 @@ public class Client {
 					e1.printStackTrace();
 				}
 			}
+		}
+		
+		private boolean canCommunicate() {
+			int keyPressed = boardJComponent.getLastKeyPressed();
+
+			return keyPressed == up || keyPressed == down || keyPressed == left || keyPressed == right;
 		}
 	}
 	
@@ -156,16 +167,13 @@ public class Client {
 
 	private void sendMessages() throws IOException {
 
-		while(!socket.isClosed()) {
-
-			Direction d = boardJComponent.getLastPressedDirection();
-			
-			if (d != null) {
-//				System.out.println("Envio de mensagem por parte do cliente:");
-				out.println(d);
-				out.flush();
-				boardJComponent.clearLastPressedDirection();
-			}
+		Direction d = boardJComponent.getLastPressedDirection();
+		
+		if (d != null) {
+			System.out.println("Envio de mensagem por parte do cliente:");
+			out.println(d);
+			out.flush();
+			boardJComponent.clearLastPressedDirection();
 		}
 	}
 }
