@@ -14,18 +14,15 @@ import game.Game;
 public class ClientGuiMain implements Observer {
 	private JFrame frame = new JFrame("Client");
 	private BoardJComponent boardGui;
-	private Game game;
 
 	public ClientGuiMain() {
 		super();
-		game = new Game();
-		game.addObserver(this);
-
+		Game.getInstance().addObserver(this);
 		buildGui();
 	}
 
 	private void buildGui() {
-		boardGui = new BoardJComponent(game);
+		boardGui = new BoardJComponent();
 		frame.add(boardGui);
 
 		frame.setSize(800,800);
@@ -38,13 +35,13 @@ public class ClientGuiMain implements Observer {
 	public void init()  {
 		frame.setVisible(true);
 		
-		new Client(game, boardGui).startClient("localhost", 8080,
+		new Client(boardGui).startClient("localhost", 8080,
 				KeyEvent.VK_W,
 				KeyEvent.VK_S,
 				KeyEvent.VK_A,
 				KeyEvent.VK_D);
 		
-		new Client(game, boardGui).startClient("localhost", 8080,
+		new Client(boardGui).startClient("localhost", 8080,
 				KeyEvent.VK_UP,
 				KeyEvent.VK_DOWN,
 				KeyEvent.VK_LEFT,

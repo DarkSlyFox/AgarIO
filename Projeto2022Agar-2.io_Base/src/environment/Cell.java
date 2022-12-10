@@ -85,14 +85,14 @@ public class Cell {
 			
 			else if (!this.player.equals(playerWhoWantsToMove)) {
 
-				System.out.println("Jogador OldPosition: " + playerWhoWantsToMove);
-				System.out.println("Jogador NewPosition: " + this.player);
+//				System.out.println("Jogador OldPosition: " + playerWhoWantsToMove);
+//				System.out.println("Jogador NewPosition: " + this.player);
 				
 				if (this.player != null && this.player.isPlayerAlive() && !this.player.hasMaxStrength()) {
 					_oldCell.lock.lock();
 					lock.lock();
 					
-					System.out.println("Inicio de conflito entre jogadores");
+//					System.out.println("Inicio de conflito entre jogadores");
 					
 					playerWhoWantsToMove.beginConflictWith(player);	
 					game.notifyChange();
@@ -102,14 +102,14 @@ public class Cell {
 				
 				else if (this.player != null && this.player.isDead() && !playerWhoWantsToMove.isHumanPlayer()) {
 
-					System.out.println("Player vai ficar à espera.");
+//					System.out.println("Player vai ficar à espera.");
 					
 					new SoloThread(playerWhoWantsToMove).start();
 					
 					try {
 						wait();
 					} catch (InterruptedException e) {
-						System.out.println("acabou espera wait");
+//						System.out.println("acabou espera wait");
 					}
 				}
 			}

@@ -1,48 +1,44 @@
 package game;
 
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
-import java.util.Random;
 
-import environment.Cell;
 import environment.Coordinate;
-import environment.CountDownLatch;
 
 public class Game extends Observable {
 
-	public static final int DIMY = 30;
-	public static final int DIMX = 30;
+	public static int DIMY = 0;
+	public static int DIMX = 0;
 	
-	protected Cell[][] board;
+	private static Game INSTANCE = null;
 	
-	private boolean gameOver = false;
+	private List<ClientPlayer> players;
 	
-	public Game() {
-		board = new Cell[Game.DIMX][Game.DIMY];
-	
-		for (int x = 0; x < Game.DIMX; x++) 
-			for (int y = 0; y < Game.DIMY; y++) 
-				board[x][y] = new Cell(new Coordinate(x, y));
+	public static Game getInstance() {
+		
+		if (INSTANCE == null) {
+			INSTANCE = new Game();
+		}
+		return INSTANCE;
 	}
 	
-	public void addPlayerToGame(ClientPlayer player) {
-		getCell(new Coordinate(player.x, player.y)).setPlayer(player);
-	}
+	private Game() {}
 	
-	public void cleanAllBoard() {
-		for (int x = 0; x < Game.DIMX; x++) 
-			for (int y = 0; y < Game.DIMY; y++) 
-				board[x][y] = new Cell(new Coordinate(x, y));
-	}
-	
-	public boolean gameOver() {
-		return gameOver;
+	public void setGameSize(int x, int y) {
+		
+		if (DIMX == 0 && DIMY == 0) {
+			Game.DIMX = x;
+			Game.DIMY = y;
+		}
 	}
 
-	public Cell getCell(Coordinate at) {
-		return board[at.x][at.y];
+	public void loadPlayers(List<ClientPlayer> players) {
+		this.players = players;
+		notifyChange();
+	}
+	
+	public List<ClientPlayer> getPlayers() {
+		return this.players;
 	}
 
 	/**	

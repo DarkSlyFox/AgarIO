@@ -7,10 +7,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-
-import environment.Coordinate;
 import environment.Direction;
-import game.ClientPlayer;
 import game.Game;
 import game.NetworkPayload;
 import gui.BoardJComponent;
@@ -20,11 +17,9 @@ public class Client {
 	private ObjectInputStream in;
 	private PrintWriter out;
 	private Socket socket;
-	private Game game;
 	private BoardJComponent boardJComponent;
 
-	public Client(Game game, BoardJComponent boardJComponent) {
-		this.game = game;
+	public Client(BoardJComponent boardJComponent) {
 		this.boardJComponent = boardJComponent;
 	}
 	
@@ -50,16 +45,18 @@ public class Client {
 		public void run() {
 			try {
 				connectToServer(address, port);
-				
-				System.out.println("Inicio de cliente:");
-				
+
 				new Thread(new Runnable() {
 
 					@Override
 					public void run() {
 						try {
+							// Vai correr a primeira vez e faz set ao jogo.
+							NetworkPayload net = (NetworkPayload)in.readObject();
+							Game.getInstance().setGameSize(net.x, net.y);
+							
 							receiveMessages();
-						} catch (IOException e) {
+						} catch (IOException | ClassNotFoundException e) {
 							e.printStackTrace();
 						}
 					}
@@ -125,19 +122,12 @@ public class Client {
 		while(!socket.isClosed()) {
 			try {
 				NetworkPayload net = (NetworkPayload)in.readObject();
-
-				game.cleanAllBoard();
-				
-				for (ClientPlayer cp : net.clientPlayers) {
-					game.getCell(new Coordinate(cp.x, cp.y)).setPlayer(cp); 
-				}
-				
-				game.notifyChange();
+				Game.getInstance().loadPlayers(net.clientPlayers);
 				
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				socket.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				socket.close();
 			}
 		}
 	}
@@ -147,7 +137,6 @@ public class Client {
 		Direction d = boardJComponent.getLastPressedDirection();
 		
 		if (d != null) {
-//			System.out.println("Envio de mensagem por parte do cliente:");
 			out.println(d);
 			out.flush();
 			boardJComponent.clearLastPressedDirection();

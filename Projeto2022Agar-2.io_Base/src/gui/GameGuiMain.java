@@ -55,12 +55,6 @@ public class GameGuiMain implements Observer {
 		}
 	}
 	
-	//teste
-	
-//	public Direction getLastDirection() {
-//		return boardGui.getLastPressedDirection();
-//	}
-
 	@Override
 	public void update(Observable o, Object arg) {
 		boardGui.repaint();
@@ -70,5 +64,4 @@ public class GameGuiMain implements Observer {
 		GameGuiMain game = new GameGuiMain();
 		game.init();
 	}
-
 }

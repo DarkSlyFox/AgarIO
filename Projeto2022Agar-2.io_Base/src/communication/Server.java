@@ -105,7 +105,7 @@ public class Server {
 			while(true) {
 				try {
 					List<ClientPlayer> clientPlayers = game.getClientPlayers();
-					NetworkPayload payload = new NetworkPayload(clientPlayers);
+					NetworkPayload payload = new NetworkPayload(clientPlayers, Game.DIMX, Game.DIMY);
 					 
 					out.writeObject(payload);
 					out.flush();
