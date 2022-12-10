@@ -29,7 +29,6 @@ public class AutomaticPlayer extends Player {
 				
 				Thread.sleep(SLEEP_CYCLE);
 			}
-			
 		}
 		catch (InterruptedException e) {
 			System.out.println("Terminou Thread " + this.getId());

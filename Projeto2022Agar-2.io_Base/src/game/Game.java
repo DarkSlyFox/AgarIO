@@ -12,13 +12,13 @@ import environment.CountDownLatch;
 
 public class Game extends Observable {
 
-	public static final int DIMY = 30;
-	public static final int DIMX = 30;
-	private static final int NUM_PLAYERS = 30;
+	public static final int DIMY = 5;
+	public static final int DIMX = 5;
+	private static final int NUM_PLAYERS = 50;
 	private static final int NUM_FINISHED_PLAYERS_TO_END_GAME = 3;
 
 	public static final long REFRESH_INTERVAL = 400;
-	public static final double MAX_INITIAL_STRENGTH = 9;
+	public static final byte MAX_INITIAL_STRENGTH = 3;
 	public static final long MAX_WAITING_TIME_FOR_MOVE = 2000;
 	public static final long INITIAL_WAITING_TIME = 5000;
 	public static final int MAX_STRENGTH = 10;
@@ -63,7 +63,7 @@ public class Game extends Observable {
 		threads.add(player);
 	}
 	
-	public void movePlayer(Player player, Coordinate newCoordination) throws InterruptedException {
+	public void movePlayer(Player player, Coordinate newCoordination) {
 		this.getCell(newCoordination).movePlayer(player);
 	}
 	
@@ -97,7 +97,7 @@ public class Game extends Observable {
 	
 	public void loadPlayers() {
 		for (int i = 0; i != NUM_PLAYERS; i++) {
-			new AutomaticPlayer(i + 1, this, (byte)generateRandomNumberBetween(1,3)).start();
+			new AutomaticPlayer(i + 1, this, (byte)generateRandomNumberBetween(1,MAX_INITIAL_STRENGTH)).start();
 		}
 	}
 

@@ -42,7 +42,14 @@ public class Cell {
 			while (this.isOcupied()) {
 //				System.out.println("Jogador que pretende se mover " + playerWhoWantsToMove.getPlayerName());
 //				System.out.println("Jogador que ocupa o lugar " + this.player);
-				isPositionOccupied.await();
+				
+//				if (this.player.isDead()) {
+//					System.out.println("Interrompido.");
+//					playerWhoWantsToMove.interrupt();
+//				}
+//				else {
+					isPositionOccupied.await();
+//				}
 			}
 			
 			playerWhoWantsToMove.setCoordinate(this.position);
