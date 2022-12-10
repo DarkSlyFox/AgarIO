@@ -55,6 +55,8 @@ public class GameGuiMain implements Observer {
 		}
 	}
 	
+	//teste
+	
 //	public Direction getLastDirection() {
 //		return boardGui.getLastPressedDirection();
 //	}
