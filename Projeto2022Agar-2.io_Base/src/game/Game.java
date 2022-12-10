@@ -12,8 +12,8 @@ import environment.CountDownLatch;
 
 public class Game extends Observable {
 
-	public static final int DIMY = 5;
-	public static final int DIMX = 5;
+	public static final int DIMY = 30;
+	public static final int DIMX = 30;
 	private static final int NUM_PLAYERS = 50;
 	private static final int NUM_FINISHED_PLAYERS_TO_END_GAME = 3;
 
@@ -85,7 +85,7 @@ public class Game extends Observable {
 				Coordinate coordinate = board[x][y].getPosition();
 				
 				if (board[x][y].isOcupied()) {
-					clientPlayers.add(new ClientPlayer(p.getStrength(),
+					clientPlayers.add(new ClientPlayer(p.getIdentification(), p.getStrength(),
 							coordinate.x, coordinate.y,
 							p.isHumanPlayer(), board[x][y].isOcupied()));
 				}
