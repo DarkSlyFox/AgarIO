@@ -15,7 +15,6 @@ public class Cell {
 	
 	public Lock lock = new ReentrantLock();
 	public Condition isPositionOccupied = lock.newCondition();
-	public Condition isBlocked = lock.newCondition();
 	
 	public Cell(Coordinate position, Game g) {
 		super();
@@ -60,50 +59,56 @@ public class Cell {
 		}
 	}
 	
-	public void movePlayer(Player playerWhoWantsToMove) throws InterruptedException {
+	public synchronized void movePlayer(Player playerWhoWantsToMove) {
 	
 		Cell _oldCell = playerWhoWantsToMove.getCurrentCell();
-
-		_oldCell.lock.lock();
-		lock.lock();
 		
 		try {
 			// Em caso de não estar ocupado.
 			if (!this.isOcupied()) {
 
+				_oldCell.lock.lock();
 				playerWhoWantsToMove.setCoordinate(this.position);				
 				this.player = playerWhoWantsToMove;
 				_oldCell.clearPlayer();
 				_oldCell.isPositionOccupied.signalAll();
 				game.notifyChange();
+				_oldCell.lock.unlock();
 			}
 			
 			else if (!this.player.equals(playerWhoWantsToMove)) {
+
+				System.out.println("Jogador OldPosition: " + playerWhoWantsToMove);
+				System.out.println("Jogador NewPosition: " + this.player);
 				
-//				System.out.println("Jogador OldPosition: " + playerWhoWantsToMove);
-//				System.out.println("Jogador NewPosition: " + this.player);
-				
-				if (this.player.isPlayerAlive() && !this.player.hasMaxStrength()) {
-//					System.out.println("Inicio de conflito entre jogadores");
+				if (this.player != null && this.player.isPlayerAlive() && !this.player.hasMaxStrength()) {
+					_oldCell.lock.lock();
+					lock.lock();
+					
+					System.out.println("Inicio de conflito entre jogadores");
+					
 					playerWhoWantsToMove.beginConflictWith(player);	
 					game.notifyChange();
+					lock.unlock();
+					_oldCell.lock.unlock();
 				}
 				
-				else if (this.player.isDead() && !playerWhoWantsToMove.isHumanPlayer()) {
+				else if (this.player != null && this.player.isDead() && !playerWhoWantsToMove.isHumanPlayer()) {
 
+					System.out.println("Player vai ficar à espera.");
+					
 					new SoloThread(playerWhoWantsToMove).start();
 					
 					try {
-						isBlocked.await();
+						wait();
 					} catch (InterruptedException e) {
 						System.out.println("acabou espera wait");
 					}
 				}
 			}
 		}
-		finally {
-			_oldCell.lock.unlock();
-			lock.unlock();
+		catch (Exception e) {
+			System.out.println(e.getMessage());
 		}
 	}
 	

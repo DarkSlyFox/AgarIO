@@ -12,10 +12,10 @@ import environment.CountDownLatch;
 
 public class Game extends Observable {
 
-	public static final int DIMY = 10;
-	public static final int DIMX = 10;
-	private static final int NUM_PLAYERS = 10;
-	private static final int NUM_FINISHED_PLAYERS_TO_END_GAME = 1;
+	public static final int DIMY = 30;
+	public static final int DIMX = 30;
+	private static final int NUM_PLAYERS = 30;
+	private static final int NUM_FINISHED_PLAYERS_TO_END_GAME = 3;
 
 	public static final long REFRESH_INTERVAL = 400;
 	public static final double MAX_INITIAL_STRENGTH = 9;
@@ -117,7 +117,7 @@ public class Game extends Observable {
 		notifyObservers();
 	}
 
-	public Cell getRandomCell() {
+	public Cell getRandomCell() {	
 		return getCell(new Coordinate((int)(Math.random()*Game.DIMX),(int)(Math.random()*Game.DIMY))); 
 	}
 }

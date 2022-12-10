@@ -1,18 +1,13 @@
 package gui;
 
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JFrame;
 
-import communication.Client;
 import communication.Server;
-import environment.Direction;
 import game.Game;
-import game.Player;
-import game.RealPlayer;
 
 public class GameGuiMain implements Observer {
 	private JFrame frame = new JFrame("Server");
@@ -60,9 +55,9 @@ public class GameGuiMain implements Observer {
 		}
 	}
 	
-	public Direction getLastDirection() {
-		return boardGui.getLastPressedDirection();
-	}
+//	public Direction getLastDirection() {
+//		return boardGui.getLastPressedDirection();
+//	}
 
 	@Override
 	public void update(Observable o, Object arg) {

@@ -27,19 +27,19 @@ import game.Player;
  * @author luismota
  *
  */
-public class BoardJComponent extends JComponent implements KeyListener {
+public class BoardJComponent extends JComponent {
 	
 	private Game game;
 
 	private Image obstacleImage = new ImageIcon("obstacle.png").getImage();
 	private Image humanPlayerImage= new ImageIcon("abstract-user-flat.png").getImage();
-	private Direction lastPressedDirection=null;
-	private int lastKeyPressed = -1;
+//	private Direction lastPressedDirection=null;
+//	private int lastKeyPressed = -1;
 	
 	public BoardJComponent(Game game) {
 		this.game = game;
 		setFocusable(true);
-		addKeyListener(this);
+//		addKeyListener(this);
 	}
 
 	@Override
@@ -92,34 +92,5 @@ public class BoardJComponent extends JComponent implements KeyListener {
 				}
 			}
 		}
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		lastPressedDirection = Direction.translateDirection(e.getKeyCode());
-		lastKeyPressed = e.getKeyCode();
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		//ignore
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// Ignored...
-	}
-
-	public Direction getLastPressedDirection() {
-		return lastPressedDirection;
-	}
-	
-	public int getLastKeyPressed() {
-		return lastKeyPressed;	
-	}
-
-	public void clearLastPressedDirection() {
-		lastPressedDirection=null;
-		lastKeyPressed = -1;
 	}
 }
