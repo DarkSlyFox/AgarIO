@@ -12,15 +12,15 @@ import environment.CountDownLatch;
 
 public class Game extends Observable {
 
-	public static final int DIMY = 10;
-	public static final int DIMX = 10;
-	private static final int NUM_PLAYERS = 5;
-	private static final int NUM_FINISHED_PLAYERS_TO_END_GAME = 1;
+	public static final int DIMY = 30;
+	public static final int DIMX = 30;
+	private static final int NUM_PLAYERS = 80;
+	private static final int NUM_FINISHED_PLAYERS_TO_END_GAME = 3;
 
 	public static final long REFRESH_INTERVAL = 400;
 	public static final byte MAX_INITIAL_STRENGTH = 3;
 	public static final long MAX_WAITING_TIME_FOR_MOVE = 2000;
-	public static final long INITIAL_WAITING_TIME = 5000;
+	public static final long INITIAL_WAITING_TIME = 10000;
 	public static final int MAX_STRENGTH = 10;
 	
 	protected Cell[][] board;

@@ -1,6 +1,5 @@
 package environment;
 
-import java.io.IOException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -40,11 +39,11 @@ public class Cell {
 		
 		try {
 			while (this.isOcupied()) {
-//				System.out.println("Jogador que pretende se mover " + playerWhoWantsToMove.getPlayerName());
-//				System.out.println("Jogador que ocupa o lugar " + this.player);
+				System.out.println("Jogador que pretende se mover " + playerWhoWantsToMove.getPlayerName());
+				System.out.println("Jogador que ocupa o lugar " + this.player);
 				
 //				if (this.player.isDead()) {
-//					System.out.println("Interrompido.");
+//					System.out.println("Interrompido." + playerWhoWantsToMove.getName());
 //					playerWhoWantsToMove.interrupt();
 //				}
 //				else {
@@ -92,7 +91,7 @@ public class Cell {
 					_oldCell.lock.lock();
 					lock.lock();
 					
-//					System.out.println("Inicio de conflito entre jogadores");
+					System.out.println("Inicio de conflito entre jogadores");
 					
 					playerWhoWantsToMove.beginConflictWith(player);	
 					game.notifyChange();
@@ -102,14 +101,14 @@ public class Cell {
 				
 				else if (this.player != null && this.player.isDead() && !playerWhoWantsToMove.isHumanPlayer()) {
 
-//					System.out.println("Player vai ficar à espera.");
+					System.out.println("Player vai ficar à espera.");
 					
 					new SoloThread(playerWhoWantsToMove).start();
 					
 					try {
 						wait();
 					} catch (InterruptedException e) {
-//						System.out.println("acabou espera wait");
+						System.out.println("acabou espera wait");
 					}
 				}
 			}

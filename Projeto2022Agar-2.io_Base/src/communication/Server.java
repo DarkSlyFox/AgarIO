@@ -36,10 +36,8 @@ public class Server {
 		public DealWithClient(Socket socket) throws IOException {
 			this.socket = socket;
 			
+			// Só para lhe dar um ID.
 			this.clientPort = Integer.parseInt(socket.getRemoteSocketAddress().toString().split(":")[1]);
-			
-			System.out.println(clientPort);
-			
 			this.realPlayer =  new RealPlayer(this.clientPort, game);
 			this.realPlayer.start();
 			

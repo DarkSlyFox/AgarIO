@@ -1,7 +1,5 @@
 package game;
 
-
-
 import java.util.Random;
 
 import environment.Cell;
@@ -24,7 +22,6 @@ public abstract class Player extends Thread {
 	private Coordinate coordinate;
 	protected long SLEEP_CYCLE;
 	
-	// TODO: get player position from data in game
 	public Cell getCurrentCell() {
 		return game.getCell(this.coordinate);
 	}
@@ -37,10 +34,6 @@ public abstract class Player extends Thread {
 		this.originalStrength = strength;
 		this.SLEEP_CYCLE = strength * Game.REFRESH_INTERVAL;
 	}
-	
-//	public void notifyPlayer() {
-//		this.notifyAll();
-//	}
 	
 	public abstract boolean isHumanPlayer();
 	

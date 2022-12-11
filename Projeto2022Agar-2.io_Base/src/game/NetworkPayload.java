@@ -7,8 +7,10 @@ public class NetworkPayload implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
+	// Tamanho do jogo.
 	public final int x;
 	public final int y;
+	
 	public final boolean gameOver;
 	public final List<ClientPlayer> clientPlayers;
 	
