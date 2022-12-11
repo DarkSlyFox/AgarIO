@@ -1,5 +1,6 @@
 package game;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
@@ -12,7 +13,7 @@ public class Game extends Observable {
 	
 	private static Game INSTANCE = null;
 	
-	private List<ClientPlayer> players;
+	private ArrayList<ClientPlayer> players;
 	
 	public static Game getInstance() {
 		
@@ -32,12 +33,12 @@ public class Game extends Observable {
 		}
 	}
 
-	public void loadPlayers(List<ClientPlayer> players) {
+	public void loadPlayers(ArrayList<ClientPlayer> players) {
 		this.players = players;
 		notifyChange();
 	}
 	
-	public List<ClientPlayer> getPlayers() {
+	public ArrayList<ClientPlayer> getPlayers() {
 		return this.players;
 	}
 

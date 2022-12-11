@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -53,38 +54,42 @@ public class BoardJComponent extends JComponent implements KeyListener {
 			g.drawLine( (int)(x * cellWidth),0, (int)(x* cellWidth), getHeight());
 		}
 		
-		// Vou buscar todos os players e percorrer, só preciso de pintar se tiver players.
-		for(ClientPlayer player : Game.getInstance().getPlayers()) {
-
-			// Fill yellow if there is a dead player
-			if(player.strength == 0) {
-				g.setColor(Color.YELLOW);
-				g.fillRect((int)(player.x* cellWidth), 
-						(int)(player.y * cellHeight),
-						(int)(cellWidth),(int)(cellHeight));
-				g.drawImage(obstacleImage, (int)(player.x * cellWidth), (int)(player.y*cellHeight), 
-						(int)(cellWidth),(int)(cellHeight), null);
-				// if player is dead, don'd draw anything else?
-				continue;
+		ArrayList<ClientPlayer> clientPlayers = Game.getInstance().getPlayers();
+		
+		if (clientPlayers != null) {
+			// Vou buscar todos os players e percorrer, só preciso de pintar se tiver players.
+			for(ClientPlayer player : clientPlayers) {
+	
+				// Fill yellow if there is a dead player
+				if(player.strength == 0) {
+					g.setColor(Color.YELLOW);
+					g.fillRect((int)(player.x* cellWidth), 
+							(int)(player.y * cellHeight),
+							(int)(cellWidth),(int)(cellHeight));
+					g.drawImage(obstacleImage, (int)(player.x * cellWidth), (int)(player.y*cellHeight), 
+							(int)(cellWidth),(int)(cellHeight), null);
+					// if player is dead, don'd draw anything else?
+					continue;
+				}
+				// Fill green if it is a human player
+				if(player.isPlayer) {
+					g.setColor(Color.GREEN);
+					g.fillRect((int)(player.x* cellWidth), 
+							(int)(player.y * cellHeight),
+							(int)(cellWidth),(int)(cellHeight));
+					// Custom icon?
+					g.drawImage(humanPlayerImage, (int)(player.x * cellWidth), (int)(player.y*cellHeight), 
+							(int)(cellWidth),(int)(cellHeight), null);
+				}
+				g.setColor(new Color(player.id * 1000));
+				((Graphics2D) g).setStroke(new BasicStroke(5));
+				Font font = g.getFont().deriveFont( (float)cellHeight);
+				g.setFont( font );
+				String strengthMarking=(player.strength == 10? "X":""+player.strength);
+				g.drawString(strengthMarking,
+						(int) ((player.x + .2) * cellWidth),
+						(int) ((player.y + .9) * cellHeight));
 			}
-			// Fill green if it is a human player
-			if(player.isPlayer) {
-				g.setColor(Color.GREEN);
-				g.fillRect((int)(player.x* cellWidth), 
-						(int)(player.y * cellHeight),
-						(int)(cellWidth),(int)(cellHeight));
-				// Custom icon?
-				g.drawImage(humanPlayerImage, (int)(player.x * cellWidth), (int)(player.y*cellHeight), 
-						(int)(cellWidth),(int)(cellHeight), null);
-			}
-			g.setColor(new Color(player.id * 1000));
-			((Graphics2D) g).setStroke(new BasicStroke(5));
-			Font font = g.getFont().deriveFont( (float)cellHeight);
-			g.setFont( font );
-			String strengthMarking=(player.strength == 10? "X":""+player.strength);
-			g.drawString(strengthMarking,
-					(int) ((player.x + .2) * cellWidth),
-					(int) ((player.y + .9) * cellHeight));
 		}
 	}
 

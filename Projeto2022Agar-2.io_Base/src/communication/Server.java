@@ -93,7 +93,6 @@ public class Server {
 				
 			while(!socket.isClosed()) {
 				if (in.ready()) {
-					System.out.println("Mensagem recebida servidor vinda do cliente: ");
 					this.realPlayer.setDirection(Direction.translateDirection(in.readLine()));
 				}
 			}

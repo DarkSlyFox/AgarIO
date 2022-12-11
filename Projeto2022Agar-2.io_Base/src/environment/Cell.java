@@ -108,7 +108,8 @@ public class Cell {
 					try {
 						wait();
 					} catch (InterruptedException e) {
-						System.out.println("acabou espera wait");
+//						System.out.println("acabou espera wait");
+						return;
 					}
 				}
 			}
