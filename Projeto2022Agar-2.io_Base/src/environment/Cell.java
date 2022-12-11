@@ -84,8 +84,8 @@ public class Cell {
 			
 			else if (!this.player.equals(playerWhoWantsToMove)) {
 
-//				System.out.println("Jogador OldPosition: " + playerWhoWantsToMove);
-//				System.out.println("Jogador NewPosition: " + this.player);
+				System.out.println("Jogador OldPosition: " + playerWhoWantsToMove);
+				System.out.println("Jogador NewPosition: " + this.player);
 				
 				if (this.player != null && this.player.isPlayerAlive() && !this.player.hasMaxStrength()) {
 					_oldCell.lock.lock();
