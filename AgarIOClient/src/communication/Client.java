@@ -92,7 +92,6 @@ public class Client {
 		
 		private boolean canCommunicate() {
 			int keyPressed = boardJComponent.getLastKeyPressed();
-
 			return keyPressed == up || keyPressed == down || keyPressed == left || keyPressed == right;
 		}
 	}
@@ -123,7 +122,6 @@ public class Client {
 			try {
 				NetworkPayload net = (NetworkPayload)in.readObject();
 				Game.getInstance().loadPlayers(net.clientPlayers);
-				
 			} catch (ClassNotFoundException e) {
 				socket.close();
 			} catch (IOException e) {

@@ -78,7 +78,7 @@ public abstract class Player extends Thread {
 	}
 	
 	public boolean canMove() {
-		return isPlayerAlive() && !hasMaxStrength() && !game.gameOver();
+		return isPlayerAlive() && !hasMaxStrength() && !game.getGameOver();
 	}
 	
 	public boolean hasMaxStrength() {

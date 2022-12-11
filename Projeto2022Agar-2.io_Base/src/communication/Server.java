@@ -30,9 +30,12 @@ public class Server {
 	private class DealWithClient extends Thread {
 		
 		private final int clientPort;
-		private RealPlayer realPlayer;
+		private final RealPlayer realPlayer;
+		private final Socket socket;
 		
 		public DealWithClient(Socket socket) throws IOException {
+			this.socket = socket;
+			
 			this.clientPort = Integer.parseInt(socket.getRemoteSocketAddress().toString().split(":")[1]);
 			
 			System.out.println(clientPort);
@@ -62,9 +65,7 @@ public class Server {
 		}
 		
 		private void serve() throws IOException {
-			
-//			System.out.println("Vai iniciar o servidor.");
-			
+						
 			new Thread(new Runnable() {
 
 				@Override
@@ -92,7 +93,7 @@ public class Server {
 		
 		private void receiveMessages() throws IOException {
 				
-			while(true) {
+			while(!socket.isClosed()) {
 				if (in.ready()) {
 					System.out.println("Mensagem recebida servidor vinda do cliente: ");
 					this.realPlayer.setDirection(Direction.translateDirection(in.readLine()));
@@ -102,18 +103,28 @@ public class Server {
 		
 		private void sendMessages() throws IOException {
 			
-			while(true) {
+			while(!socket.isClosed()) {
 				try {
 					List<ClientPlayer> clientPlayers = game.getClientPlayers();
-					NetworkPayload payload = new NetworkPayload(clientPlayers, Game.DIMX, Game.DIMY);
+					NetworkPayload payload = new NetworkPayload(clientPlayers, Game.DIMX, Game.DIMY, game.getGameOver());
 					 
 					out.writeObject(payload);
 					out.flush();
-				
-//					System.out.println("Mensagem enviada pelo servidor: ");
+
+					closeConnectionIfNeeded();
 					
 					Thread.sleep(Game.REFRESH_INTERVAL);
 				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		private void closeConnectionIfNeeded() {
+			if (game.getGameOver()) {
+				try {
+					socket.close();
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
@@ -127,7 +138,6 @@ public class Server {
 			while(true) {
 				Socket socket = ss.accept();
 				new DealWithClient(socket).start();
-//				System.out.println("Servidor iniciou.");
 			}
 		}
 		catch(Exception e) {
