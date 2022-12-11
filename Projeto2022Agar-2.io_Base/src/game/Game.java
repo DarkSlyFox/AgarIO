@@ -74,9 +74,9 @@ public class Game extends Observable {
 		counter.countDown();
 	}
 	
-	public List<ClientPlayer> getClientPlayers() {
+	public ArrayList<ClientPlayer> getClientPlayers() {
 
-		List<ClientPlayer> clientPlayers = new ArrayList<>();
+		ArrayList<ClientPlayer> clientPlayers = new ArrayList<>();
 		
 		for (int x = 0; x < Game.DIMX; x++) {
 			for (int y = 0; y < Game.DIMY; y++) {

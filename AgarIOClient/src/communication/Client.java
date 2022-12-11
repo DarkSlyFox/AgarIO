@@ -121,7 +121,10 @@ public class Client {
 		while(!socket.isClosed()) {
 			try {
 				NetworkPayload net = (NetworkPayload)in.readObject();
-				Game.getInstance().loadPlayers(net.clientPlayers);
+				
+				if (net.clientPlayers != null && net.clientPlayers.size() > 0) {
+					Game.getInstance().loadPlayers(net.clientPlayers);
+				}
 			} catch (ClassNotFoundException e) {
 				socket.close();
 			} catch (IOException e) {

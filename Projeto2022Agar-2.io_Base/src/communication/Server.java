@@ -103,7 +103,7 @@ public class Server {
 			
 			while(!socket.isClosed()) {
 				try {
-					List<ClientPlayer> clientPlayers = game.getClientPlayers();
+					ArrayList<ClientPlayer> clientPlayers = game.getClientPlayers();
 					NetworkPayload payload = new NetworkPayload(clientPlayers, Game.DIMX, Game.DIMY, game.getGameOver());
 					 
 					out.writeObject(payload);

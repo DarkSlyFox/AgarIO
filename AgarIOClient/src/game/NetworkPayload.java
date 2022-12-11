@@ -1,7 +1,7 @@
 package game;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.ArrayList;
 
 public class NetworkPayload implements Serializable {
 
@@ -12,9 +12,9 @@ public class NetworkPayload implements Serializable {
 	public final int y;
 	
 	public final boolean gameOver;
-	public final List<ClientPlayer> clientPlayers;
+	public final ArrayList<ClientPlayer> clientPlayers;
 	
-	public NetworkPayload(List<ClientPlayer> clientPlayers, int x, int y, boolean gameOver) {
+	public NetworkPayload(ArrayList<ClientPlayer> clientPlayers, int x, int y, boolean gameOver) {
 		this.clientPlayers = clientPlayers;
 		this.x = x;
 		this.y = y;
