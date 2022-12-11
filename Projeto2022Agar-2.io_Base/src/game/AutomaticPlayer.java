@@ -31,7 +31,7 @@ public class AutomaticPlayer extends Player {
 			}
 		}
 		catch (InterruptedException e) {
-			System.out.println("Terminou Thread " + this.getId());
+//			System.out.println("Terminou Thread " + this.getId());
 			return;
 		}
 		

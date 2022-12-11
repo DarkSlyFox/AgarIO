@@ -50,7 +50,6 @@ public class Game extends Observable {
 			e.printStackTrace();
 		}
 		
-		System.out.println("acabou.");
 		gameOver = true;
 		
 		for(Thread e : threads) {
